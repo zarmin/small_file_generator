@@ -1,6 +1,7 @@
 
 require 'trollop'
 require 'fileutils'
+require 'securerandom'
 
 # opts = Trollop::options do
 #  opt :
@@ -26,6 +27,20 @@ FileUtils.mkdir target
 
 # Dir.chdir( target ) 
 
+def file_content
+  a = rand(1..3)
+
+  if a == 1
+    return SecureRandom.random_bytes( Random.rand( 512..65536 ) ) 
+  elsif a == 2
+    return SecureRandom.hex( Random.rand( 128..65535 ) )
+  elsif a == 3
+    return 'this is a very small file with redundant contents'
+  else
+    return 'file content template'
+  end
+end
+
 def rn( avg, max )
   if( Random.rand > 0.9 )
     Random.rand(avg..max)
@@ -39,7 +54,7 @@ def generate_tree( root, depth )
 
   rn( $avg_files_in_dir, $max_files_in_dir ).times do |i|
     _file = "#{root}/file_#{i}_#{i.hash ^ i ^ i.object_id}"
-    File.write( _file, 'content template' )
+    File.write( _file, file_content )
   end
 
   rn( $avg_subdir_in_dir, $max_subdir_in_dir ).times do |i|
