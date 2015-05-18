@@ -3,14 +3,18 @@ require 'trollop'
 require 'fileutils'
 require 'securerandom'
 
-# opts = Trollop::options do
-#  opt :
-# end
+opts = Trollop::options do
+  opt :path, "Application path", type: :string, required: true
+end
+
+if opts[:path].nil?
+  raise "Path parameter is mandatory"
+end
 
 path = File.dirname( __FILE__ )
 Dir.chdir( path )
 
-target = 'files'
+target = opts[:path]
 
 # number_of_files = 9000
 $max_depth = 4
